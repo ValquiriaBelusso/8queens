@@ -21,8 +21,8 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
 
 
-    public TreeNode<T> addChild(T child, int id) {
-        TreeNode<T> childNode = new TreeNode<T>(child, id);
+    public TreeNode<T> addChild(T data, int id) {
+        TreeNode<T> childNode = new TreeNode<T>(data, id);
         childNode.parent = this;
         this.children.add(childNode);
         return childNode;
@@ -43,6 +43,6 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         return Iterable.super.spliterator();
     }
 
-    // other features ...
+    /*public List<TreeNode<T>>*/
 
 }

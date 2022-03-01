@@ -11,11 +11,31 @@ public class Tree<T> {
 
     @Override
     public String toString() {
-        System.out.println(root.data);
-        for (TreeNode<T> child : root.children) {
+        printTree(root, 0);
+        /*for (TreeNode<T> child : root.children) {
             child.toString();
-        }
+        }*/
         return " ";
+    }
+
+    public void printTree(TreeNode<T> node, int tabNumber){
+        String aux = "";
+        for(int i=0; i<tabNumber; i++){
+            aux=aux+"\t";
+        }
+        aux=aux+"|\n";
+        for(int i=0; i<tabNumber; i++){
+            aux=aux+"\t";
+        }
+        aux=aux+"|_"+node.data;
+        System.out.println(aux);
+        tabNumber++;
+        if(!node.children.isEmpty()){
+            for(TreeNode<T> child : node.children){
+                printTree(child, tabNumber);
+            }
+        }else
+            return ;
     }
 
     public TreeNode<T> find(T data) {
