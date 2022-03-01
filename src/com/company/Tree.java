@@ -12,9 +12,6 @@ public class Tree<T> {
     @Override
     public String toString() {
         printTree(root, 0);
-        /*for (TreeNode<T> child : root.children) {
-            child.toString();
-        }*/
         return " ";
     }
 

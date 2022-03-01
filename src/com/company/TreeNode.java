@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 public class TreeNode<T> implements Iterable<TreeNode<T>> {
 
     T data;
-    int id;
+    int id, height;
     TreeNode<T> parent;
     List<TreeNode<T>> children;
 
@@ -17,6 +17,7 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         this.data = data;
         this.id = _id;
         this.children = new LinkedList<TreeNode<T>>();
+        this.height = 0;
     }
 
 
@@ -43,6 +44,6 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         return Iterable.super.spliterator();
     }
 
-    /*public List<TreeNode<T>>*/
+
 
 }
