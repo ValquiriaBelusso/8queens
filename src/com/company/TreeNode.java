@@ -20,7 +20,9 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         this.height = 0;
     }
 
-
+    public T getData(){
+        return this.data;
+    }
 
     public TreeNode<T> addChild(T data, int id) {
         TreeNode<T> childNode = new TreeNode<T>(data, id);

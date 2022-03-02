@@ -155,34 +155,34 @@ public class BoardState {
         return conflicts;
     }
 
-    public String toString(){
-        List<Square> filledSquares = new LinkedList<Square>();
-        filledSquares=this.getFilledSquares();
-        String board="";
-
-        for(int i=0; i<8; i++){
-            String linha="", letra="";
-            for(int j=0; j<8; j++){
-                if(filledSquares==null){
-                    letra=".";
-                }
-                for(Square square : this.board){
-                    for(Square square1 : filledSquares){
-                        if((square.line==square1.line)&&(square.column==square1.column)){
-                            letra="Q";
-                            break;
-                        }else{
-                            letra=".";
-                        }
-                    }
-                }
-                linha=linha+letra+" ";
-            }
-//            System.out.println(linha);
-            board=board+linha+"\n";
-        }
-
-        return board;
-    }
+//    public String toString(){
+//        List<Square> filledSquares = new LinkedList<Square>();
+//        filledSquares=this.getFilledSquares();
+//        String board="";
+//
+//        for(int i=0; i<8; i++){
+//            String linha="", letra="";
+//            for(int j=0; j<8; j++){
+//                if(filledSquares==null){
+//                    letra=".";
+//                }
+//                for(Square square : this.board){
+//                    for(Square square1 : filledSquares){
+//                        if((square.line==square1.line)&&(square.column==square1.column)){
+//                            letra="Q";
+//                            break;
+//                        }else{
+//                            letra=".";
+//                        }
+//                    }
+//                }
+//                linha=linha+letra+" ";
+//            }
+////            System.out.println(linha);
+//            board=board+linha+"\n";
+//        }
+//
+//        return board;
+//    }
 
 }
