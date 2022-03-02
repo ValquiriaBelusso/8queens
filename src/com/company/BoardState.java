@@ -8,6 +8,13 @@ public class BoardState {
 
     public BoardState()  {
         this.board = new LinkedList<Square>();
+
+        for(int i=0; i<8; i++){
+            for(int j=0; j<8; j++){
+                Square square = new Square(i,j);
+                this.board.add(square);
+            }
+        }
     }
 
     public List<Square> getEmptySquares(){
@@ -38,16 +45,9 @@ public class BoardState {
         }
     }
 
-    public int conflicts(){
-        int conflicts=0;
+    public List<Square> getConflictsBySquare(Square square){
+        List<Square> conflicts = new LinkedList<Square>();
 
-        return conflicts;
-    }
-
-    public Dictionary<Square, Integer> getConflictsList(){
-        Dictionary<Square, Integer> conflicts = new Hashtable<Square, Integer>();
-
-        for(Square square : this.getFilledSquares()){
             int m,n;
             m = square.line;
             n = square.column;
@@ -58,36 +58,22 @@ public class BoardState {
 //                    System.out.println("{"+m+","+i+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==m)&&(square1.column==i)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
             }
-            //System.out.println("----------");
             //coluna
             for(int i=0; i<8; i++){
                 if(i!=m){
                     //System.out.println("{"+i+","+n+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==i)&&(square1.column==n)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
             }
-            //System.out.println("----------");
             //diagonais
             int j=n;
             int k=n;
@@ -98,13 +84,7 @@ public class BoardState {
                     //System.out.println("{"+i+","+j+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==i)&&(square1.column==j)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
@@ -112,13 +92,7 @@ public class BoardState {
                     //System.out.println("{"+i+","+k+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==i)&&(square1.column==k)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
@@ -132,13 +106,7 @@ public class BoardState {
                     //System.out.println("{"+i+","+j+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==i)&&(square1.column==j)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
@@ -146,42 +114,75 @@ public class BoardState {
                     //System.out.println("{"+i+","+k+"}");
                     for(Square square1: this.getFilledSquares()){
                         if((square1.line==i)&&(square1.column==k)){
-                            if(conflicts.get(square)==null){
-                                conflicts.put(square,1);
-                            }else{
-                                int aux=conflicts.get(square);
-                                aux++;
-                                conflicts.put(square,aux);
-                            }
+                            conflicts.add(square1);
                         }
                     }
                 }
             }
+
+        return conflicts;
+    }
+
+    public int totalConflicts(){
+        int total=0;
+
+        Enumeration<Integer> a = this.getConflictsList().elements();
+        while(a.hasMoreElements()){
+            int g= a.nextElement();
+            total = total+g;
+        }
+        total = total/2;
+        return total;
+    }
+
+    public Dictionary<Square, Integer> getConflictsList(){
+        Dictionary<Square, Integer> conflicts = new Hashtable<Square, Integer>();
+
+//        int aux=conflicts.get(square);
+//        aux++;
+//        conflicts.put(square,aux);
+
+        for(Square square : this.getFilledSquares()){
+            int aux;
+            if(conflicts.get(square)==null){
+                aux=this.getConflictsBySquare(square).size();
+            }else{
+                aux=conflicts.get(square)+1;
+            }
+            conflicts.put(square,aux);
         }
 
         return conflicts;
     }
 
-    public void printBoard(){
+    public String toString(){
         List<Square> filledSquares = new LinkedList<Square>();
         filledSquares=this.getFilledSquares();
-        System.out.println(filledSquares);
+        String board="";
 
         for(int i=0; i<8; i++){
             String linha="", letra="";
             for(int j=0; j<8; j++){
-                for(Square square : filledSquares){
-                    if((square.line==i)&&(square.column==j)){
-                        letra="Q";
-                        break;
-                    }else{
-                        letra="X";
+                if(filledSquares==null){
+                    letra=".";
+                }
+                for(Square square : this.board){
+                    for(Square square1 : filledSquares){
+                        if((square.line==square1.line)&&(square.column==square1.column)){
+                            letra="Q";
+                            break;
+                        }else{
+                            letra=".";
+                        }
                     }
                 }
                 linha=linha+letra+" ";
             }
-            System.out.println(linha);
+//            System.out.println(linha);
+            board=board+linha+"\n";
         }
+
+        return board;
     }
 
 }

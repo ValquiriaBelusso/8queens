@@ -24,7 +24,8 @@ public class Tree<T> {
         for(int i=0; i<tabNumber; i++){
             aux=aux+"\t";
         }
-        aux=aux+"|_"+node.data;
+        //System.out.println(node.data.toString());
+        aux=aux+"|_"+node.data.toString();
         System.out.println(aux);
         tabNumber++;
         if(!node.children.isEmpty()){
