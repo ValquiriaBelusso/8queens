@@ -42,6 +42,9 @@ public class Tree<T> {
     }
 
     public TreeNode<T> traversePreOrder(TreeNode<T> node, boolean[] isVisited, T data) {
+        if(node.data==data){
+            return node;
+        }
         if (node != null) {
             isVisited[node.id-1] = true;
             for (TreeNode<T> n: node.children) {
