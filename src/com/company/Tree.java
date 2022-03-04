@@ -68,11 +68,30 @@ public class Tree<T> {
         }
     }
 
+    public int getNodeHeight(T data){
+        boolean[] isVisited = new boolean[size];
+        return getHeightAux(root, isVisited, data, 0);
+    }
 
+    private int getHeightAux(TreeNode<T> node, boolean[] isVisited, T data, int height) {
+        if(node.data==data){
+            return height;
+        }
+        if (node != null) {
+            isVisited[node.id-1] = true;
+            for (TreeNode<T> n: node.children) {
+                if (n.data == data) return height+1;
+                else getHeightAux(n, isVisited, data, height+1);
+            }
+        }
+        return -1;
+    }
 
-    public void addChild(TreeNode<T> parent, T data) {
+    public TreeNode<T> addChild(TreeNode<T> parent, T data) {
         size++;
-        parent.addChild(data, size);
+        TreeNode<T> node = parent.addChild(data, size);
+        return node;
+
     }
     
     public TreeNode<T> getRoot() {

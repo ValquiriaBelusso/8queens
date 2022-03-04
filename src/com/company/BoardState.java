@@ -5,14 +5,17 @@ import java.util.*;
 public class BoardState {
 
     List<Square> board;
+    List<Square> freeBoard;
 
     public BoardState()  {
         this.board = new LinkedList<Square>();
+        this.freeBoard = new LinkedList<Square>();
 
         for(int i=0; i<8; i++){
             for(int j=0; j<8; j++){
                 Square square = new Square(i,j);
                 this.board.add(square);
+                this.freeBoard.add(square);
             }
         }
     }
@@ -37,10 +40,99 @@ public class BoardState {
         return filledSquares;
     }
 
+    public List<Square> getAttacks(Square square){
+        List<Square> conflicts = new LinkedList<Square>();
+
+        int m,n;
+        m = square.line;
+        n = square.column;
+
+        //linha
+        for(int i=0; i<8; i++){
+            if(i!=n){
+//                    System.out.println("{"+m+","+i+"}");
+                for(Square square1: this.board) {
+                    if ((square1.line == m) && (square1.column == i)) {
+                        conflicts.add(square1);
+                    }
+                }
+            }
+        }
+        //coluna
+        for(int i=0; i<8; i++){
+            if(i!=m){
+                //System.out.println("{"+i+","+n+"}");
+                for(Square square1: this.board){
+                    if((square1.line==i)&&(square1.column==n)){
+                        conflicts.add(square1);
+                    }
+                }
+            }
+        }
+        //diagonais
+        int j=n;
+        int k=n;
+        for(int i=m-1; i>=0; i--){
+            j--;
+            k++;
+            if(j>=0){
+                //System.out.println("{"+i+","+j+"}");
+                for(Square square1: this.board){
+                    if((square1.line==i)&&(square1.column==j)){
+                        conflicts.add(square1);
+                    }
+                }
+            }
+            if(k<8){
+                //System.out.println("{"+i+","+k+"}");
+                for(Square square1: this.board){
+                    if((square1.line==i)&&(square1.column==k)){
+                        conflicts.add(square1);
+                    }
+                }
+            }
+        }
+        j=n;
+        k=n;
+        for(int i=m+1; i<8; i++){
+            j--;
+            k++;
+            if(j>=0){
+                //System.out.println("{"+i+","+j+"}");
+                for(Square square1: this.board){
+                    if((square1.line==i)&&(square1.column==j)){
+                        conflicts.add(square1);
+                    }
+                }
+            }
+            if(k<8){
+                //System.out.println("{"+i+","+k+"}");
+                for(Square square1: this.board){
+                    if((square1.line==i)&&(square1.column==k)){
+                        conflicts.add(square1);
+                    }
+                }
+            }
+        }
+
+        return conflicts;
+    }
+
+    private void updateFreeSquares(Square queen){
+        List<Square> conflicts = new LinkedList<>();
+        conflicts=this.getAttacks(queen);
+
+        for(int i=0; i<conflicts.size(); i++){
+            freeBoard.remove(conflicts.get(i));
+        }
+    }
+
     public void putQueen(int line, int column){
         for(Square square : board){
             if((square.line==line)&&(square.column==column)){
                 square.isQueen=true;
+                this.freeBoard.remove(square);
+                updateFreeSquares(square);
             }
         }
     }
@@ -153,6 +245,13 @@ public class BoardState {
         }
 
         return conflicts;
+    }
+
+    public boolean isSolution(){
+        if((this.getFilledSquares().size()==8)&&(this.totalConflicts()==0)){
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

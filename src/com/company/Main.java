@@ -1,40 +1,84 @@
 package com.company;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     int id=0;
 
-    public static void gerarFilhos(Tree<BoardState> arvore, BoardState oldState, int line, int column) {
+    public static TreeNode<BoardState> gerarFilhos(Tree<BoardState> arvore, TreeNode<BoardState> parent, int line, int column) {
+//        System.out.println("entrou no gerar");
         BoardState newState = new BoardState();
-
-        for(Square queen : oldState.getFilledSquares()){
+//        System.out.println("2");
+        for(Square queen : parent.data.getFilledSquares()){
             newState.putQueen(queen.line, queen.column);
+//            System.out.println("for");
         }
+//        System.out.println("saiu do for");
 
         newState.putQueen(line,column);
-//        System.out.println(newState.getFilledSquares().size());
-//        System.out.println(oldState);
-        System.out.println(newState);
-//        System.out.println(arvore.find(oldState).getData());
+//        System.out.println("enfiou a rainha");
+        TreeNode n = arvore.addChild(parent, newState);
+//        System.out.println(n);
+//        if(n==null){
+//            System.out.println("pai\n"+oldState);
+//            System.out.println("linha  "+line+"coluna  "+column);
+//            System.out.println("deu null");
+//        }
+        return n;
+    }
 
+    public static List<TreeNode<BoardState>> expandir(Tree<BoardState> arvore, TreeNode<BoardState> node){
+        System.out.println("entrou no expandir");
+        List<TreeNode<BoardState>> novosNos = new LinkedList<>();
 
-        arvore.addChild(arvore.find(oldState), newState);
+        for(int i=0; i<node.data.freeBoard.size(); i++){
+            novosNos.add(gerarFilhos(arvore,node,node.data.getEmptySquares().get(i).line, node.data.getEmptySquares().get(i).column));
+        }
+        System.out.println("saiu do expandir com "+novosNos.size()+" novos filhos");
+        return novosNos;
+    }
 
+    public static BoardState profundidadeLimitada(Tree<BoardState> arvore, int limite){
+        Stack<TreeNode<BoardState>> borda = new Stack<>();
+        borda.push(arvore.root);
+
+        while(!borda.isEmpty()){
+//            System.out.println("entrou no while");
+            TreeNode<BoardState> node = borda.pop();
+            System.out.println("deu pop");
+            if(node.data.isSolution()){
+                System.out.println("entrou no primeiro if - "+node.data.isSolution());
+                return node.data;
+            }
+            if(arvore.getNodeHeight(node.data)<limite){
+                System.out.println("entrou no segundo if - chamou expandir");
+                for(TreeNode<BoardState> a : expandir(arvore, node)){
+                    borda.push(a);
+                }
+//                System.out.println("terminou o for");
+            }
+
+        }
+//        System.out.println("pulou fora do while");
+
+        return null;
     }
 
     public static void main(String[] args) {
 
         BoardState inicio = new BoardState();
         Tree<BoardState> arvore = new Tree<>(inicio);
+        BoardState solution = profundidadeLimitada(arvore, 8);
+        System.out.println(solution);
+//        System.out.println(solution);
 //        System.out.println(inicio);
-        gerarFilhos(arvore,inicio,3,3);
-//        gerarFilhos(arvore,inicio,3,1);
+//        gerarFilhos(arvore,arvore.getRoot(),3,1);
+//        gerarFilhos(arvore,arvore.getRoot(),3,3);
+//        inicio.putQueen(3,3);
+//        inicio.putQueen(3,1);
 //        gerarFilhos(arvore,inicio,7,0);
 //        System.out.println(arvore);
+//        System.out.println(arvore.getNodeHeight(arvore.root.children.get(0).data));
 
 
 
